@@ -1,0 +1,52 @@
+{{template "header"}}
+<title>{{.Topic.Title}}- 我的beego博客</title>
+</head>
+<body>
+{{template "navbar" .}}
+<div class="container page-header" style="width: 1000px;">
+    <div>
+    {{$lables := .Labels}}
+    {{with .Topic}}
+        <h1>{{.Title}}
+            <small>{{.Category}}</small>
+        </h1>
+        <h5> 文章标签:
+        {{range $lables}}
+            <a href="/?label={{.}}">{{.}}</a>
+        {{end}}
+        </h5>
+        <h5>文章内容:<br><br>
+        {{.Content}}</h5>
+        <h5>文章附件: <a href="/attachment/{{.Attachment}}">{{.Attachment}}</a></h5>
+    {{end}}
+    </div>
+</div>
+<div class="container" style="width: 1000px">
+{{$tid := .Topic.Id}}
+{{$isLogin := .IsLogin}}
+    <h3>文章评论：</h3>
+{{range .Replies}}
+    <h4>{{.Name}}
+        <small>{{.Created}} <a href="/reply/delete?tid={{$tid}}&rid={{.Id}}">删除</a></small>
+    </h4>
+{{.Content}}
+{{end}}
+    <h3>本文回复：</h3>
+    <form method="post" action="/reply/add">
+        <input type="hidden" name="tid" value="{{.Topic.Id}}">
+        <div class="form-group">
+            <label>显示昵称：</label>
+            <input type="text" class="form-control" name="nickname">
+        </div>
+
+        <div class="form-group">
+            <label>内容：</label>
+            <textarea name="content" id="" cols="30" rows="10" class="form-control"></textarea>
+        </div>
+        <button class="btn btn-default" type="submit">提交回复</button>
+    </form>
+
+</div>
+</body>
+
+{{template "footer"}}
